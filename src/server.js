@@ -1,3 +1,4 @@
+// src/server.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -13,52 +14,60 @@ import "./models/Category.js";
 import "./models/Product.js";
 import "./models/OrderItem.js";
 import "./models/associations.js";
-
 import path from "path";
 import { fileURLToPath } from "url";
 
-
+// ✅ Load environment variables
 dotenv.config();
+
 const app = express();
 
-// ✅ uploads folder ko static serve karo
+// ✅ Serve uploads folder
 app.use("/uploads", express.static("uploads"));
 
-// app.use(cors());
+// ✅ Enable CORS for frontend
 app.use(cors({
   origin: ["http://localhost:5173", "https://shopclause.netlify.app"],
   credentials: true,
 }));
 
+// ✅ Parse JSON requests
 app.use(express.json());
 
+// ✅ Health check route
 app.get("/", (req, res) => {
-  res.send("🚀 Shopclues Backend API is running...");
+  res.send("🚀 ShopClause Backend API is running...");
 });
 
-// ✅ Routes
+// ✅ API Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);  
+app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/categories", categoryRoutes);
 
-
+// ✅ Static images (public folder)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// serve static files (images)
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 const PORT = process.env.PORT || 5000;
 
+// ✅ Start server
 const startServer = async () => {
   try {
     await connectDB();
-    await sequelize.sync({ alter: true }); // DB tables auto create
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+    await sequelize.sync({ alter: true }); // Auto create/alter DB tables
+
+    app.listen(PORT, () => {
+      console.log("======================================");
+      console.log("✅ Database connected");
+      console.log(`🚀 Server running on port: ${PORT}`);
+      console.log("======================================");
+    });
   } catch (error) {
-    console.error("Server error:", error);
+    console.error("❌ Server failed to start:", error.message);
   }
 };
 

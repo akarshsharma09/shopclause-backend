@@ -1,12 +1,15 @@
+// src/config/db.js
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+import path from "path";
 
-// Load .env.local for local dev, ignore in Railway
-const envFile = process.env.NODE_ENV === "production" ? null : ".env.local";
-if (envFile) dotenv.config({ path: envFile });
+// Load .env for local development, Railway injects env automatically in production
+const envFile = process.env.NODE_ENV === "production" ? null : ".env";
+if (envFile) {
+  dotenv.config({ path: path.resolve(envFile), debug: false });
+}
 
-// In production, Railway injects variables automatically
-// In local dev, .env.local provides local MySQL config
+// Create Sequelize instance
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -19,15 +22,16 @@ const sequelize = new Sequelize(
   }
 );
 
+// Connect to DB with retry logic
 const connectDB = async () => {
-  let retries = 5; // retry 5 times if DB is not ready
+  let retries = 5;
   while (retries) {
     try {
       await sequelize.authenticate();
       console.log("✅ MySQL Connected Successfully");
       break;
     } catch (error) {
-      console.error("❌ Database connection error:", error);
+      console.error("❌ Database connection error:", error.message);
       retries -= 1;
       console.log(`Retrying in 5 seconds... (${retries} retries left)`);
       await new Promise((res) => setTimeout(res, 5000));
