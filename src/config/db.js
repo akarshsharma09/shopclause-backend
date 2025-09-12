@@ -4,9 +4,14 @@ import dotenv from "dotenv";
 import path from "path";
 
 // Load .env for local development, Railway injects env automatically in production
-const envFile = process.env.NODE_ENV === "production" ? null : ".env";
-if (envFile) {
-  dotenv.config({ path: path.resolve(envFile), debug: false });
+// const envFile = process.env.NODE_ENV === "production" ? null : ".env";
+// if (envFile) {
+//   dotenv.config({ path: path.resolve(envFile), debug: false });
+// }
+
+// ✅ Load .env only in local development
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.resolve(".env"), debug: false });
 }
 
 // Create Sequelize instance

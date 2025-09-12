@@ -1,6 +1,6 @@
 // src/server.js
 import express from "express";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB, sequelize } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -18,7 +18,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 // ✅ Load environment variables
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 
