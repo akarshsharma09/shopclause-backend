@@ -3,31 +3,32 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import path from "path";
 
-// Load .env for local development, Railway injects env automatically in production
-// const envFile = process.env.NODE_ENV === "production" ? null : ".env";
-// if (envFile) {
-//   dotenv.config({ path: path.resolve(envFile), debug: false });
-// }
-
-// ✅ Load .env only in local development
+// Load .env in local development
 if (process.env.NODE_ENV !== "production") {
-  dotenv.config({ path: path.resolve(".env"), debug: false });
+  dotenv.config({ path: path.resolve(".env") });
 }
 
-// Create Sequelize instance
-const sequelize = new Sequelize(
-  process.env.DB_NAME || process.env.MYSQLDATABASE,
-  process.env.DB_USER || process.env.MYSQLUSER,
-  process.env.DB_PASSWORD || process.env.MYSQLPASSWORD,
-  {
-    host: process.env.DB_HOST || process.env.MYSQLHOST,
-    port: process.env.DB_PORT || process.env.MYSQLPORT,
-    dialect: process.env.DB_DIALECT || "mysql",
-    logging: false,
-  }
-);
+// Determine DB connection params, allow fallback from Railway vars
+const DB_NAME = process.env.DB_NAME || process.env.MYSQLDATABASE;
+const DB_USER = process.env.DB_USER || process.env.MYSQLUSER;
+const DB_PASSWORD = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD;
+const DB_HOST = process.env.DB_HOST || process.env.MYSQLHOST;
+const DB_PORT = process.env.DB_PORT || process.env.MYSQLPORT;
+const DIALECT = process.env.DB_DIALECT || "mysql";
 
-// Connect to DB with retry logic
+// Log what we are using (for debugging)
+console.log("Using DB_HOST:", DB_HOST);
+console.log("Using DB_PORT:", DB_PORT);
+console.log("Using DB_NAME:", DB_NAME);
+console.log("Using DB_USER:", DB_USER);
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: DIALECT,
+  logging: false,
+});
+
 const connectDB = async () => {
   let retries = 5;
   while (retries) {
@@ -42,7 +43,10 @@ const connectDB = async () => {
       await new Promise((res) => setTimeout(res, 5000));
     }
   }
-  if (!retries) process.exit(1); // exit if DB never connects
+  if (!retries) {
+    console.error("❌ All retries failed. Exiting process.");
+    process.exit(1);
+  }
 };
 
 export { sequelize, connectDB };
