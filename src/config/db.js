@@ -7,6 +7,13 @@ if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: path.resolve(".env") });
 }
 
+console.log("DB_HOST =>", process.env.DB_HOST);
+console.log("DB_PORT =>", process.env.DB_PORT);
+console.log("DB_NAME =>", process.env.DB_NAME);
+console.log("DB_USER =>", process.env.DB_USER);
+console.log("DB_PASSWORD =>", process.env.DB_PASSWORD ? "****" : "NOT SET");
+
+
 const DB_NAME = process.env.DB_NAME || process.env.MYSQLDATABASE;
 const DB_USER = process.env.DB_USER || process.env.MYSQLUSER;
 const DB_PASSWORD = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD;
