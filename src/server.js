@@ -18,7 +18,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 console.log("All ENV Vars:", process.env);
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ✅ Load environment variables
 // dotenv.config();
@@ -53,8 +54,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/categories", categoryRoutes);
 
 // ✅ Static images (public folder)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 const PORT = process.env.PORT || 5000;
