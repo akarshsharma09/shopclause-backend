@@ -25,7 +25,11 @@ const OrderItem = sequelize.define("OrderItem", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
-});
+},
+                                   {
+    tableName: "orderitems", // 👈 Force lowercase table name
+    timestamps: false,
+  });
 
 // ✅ Relation
 // OrderItem.belongsTo(Product, { foreignKey: "productId", as: "Product" });
