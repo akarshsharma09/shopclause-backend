@@ -17,6 +17,9 @@ import "./models/associations.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+console.log("All ENV Vars:", process.env);
+
+
 // ✅ Load environment variables
 // dotenv.config();
 
