@@ -26,7 +26,9 @@ console.log("All ENV Vars:", process.env);
 const app = express();
 
 // ✅ Serve uploads folder
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // ✅ Enable CORS for frontend
 app.use(cors({
