@@ -6,7 +6,12 @@ import Product from "./Product.js";
 const Cart = sequelize.define("Cart", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   quantity: { type: DataTypes.INTEGER, defaultValue: 1, allowNull: false },
-});
+},
+ {
+    tableName: "carts", // 👈 Force lowercase table name
+    timestamps: false,
+  }
+);
 
 // ✅ Relationships
 // User.hasMany(Cart, { foreignKey: "userId", onDelete: "CASCADE" });
