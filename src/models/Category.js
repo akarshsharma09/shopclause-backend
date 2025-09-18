@@ -11,6 +11,11 @@ const Category = sequelize.define("Category", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-});
+},
+ {
+    tableName: "categories", // 👈 Force lowercase table name
+    timestamps: false,
+  }
+);
 
 export default Category;
