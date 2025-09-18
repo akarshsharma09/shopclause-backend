@@ -46,7 +46,12 @@ const Order = sequelize.define("Order", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-});
+},
+                                {
+    tableName: "orders", // 👈 Force lowercase table name
+    timestamps: false,
+  }
+);
 
 // ✅ Associations
 // Order.belongsTo(User, { foreignKey: "userId", as: "User", onDelete: "CASCADE" });
