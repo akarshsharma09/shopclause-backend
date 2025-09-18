@@ -24,6 +24,11 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     defaultValue: "USER",
   },
-});
+},
+ {
+    tableName: "users", // 👈 Force lowercase table name
+    timestamps: false,
+  }
+);
 
 export default User;
