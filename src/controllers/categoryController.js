@@ -14,7 +14,9 @@ export const createCategory = async (req, res) => {
 // Get all categories
 export const getCategories = async (req, res) => {
   try {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+order: [['id', 'ASC']] 
+});
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error fetching categories", error });
