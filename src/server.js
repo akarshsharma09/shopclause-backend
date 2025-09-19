@@ -16,6 +16,7 @@ import "./models/OrderItem.js";
 import "./models/associations.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 console.log("All ENV Vars:", process.env);
 const __filename = fileURLToPath(import.meta.url);
@@ -28,8 +29,22 @@ const app = express();
 
 // ✅ Serve uploads folder
 // app.use("/uploads", express.static("uploads"));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.resolve("./uploads")));
 
+// ✅ Temporary Debug Route
+app.get("/debug/uploads", (req, res) => {
+  const dirPath = path.resolve("./uploads");
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Uploads folder not found",
+        details: err.message,
+      });
+    }
+    res.json({ files });
+  });
+});
 
 // ✅ Enable CORS for frontend
 app.use(cors({
